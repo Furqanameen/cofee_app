@@ -39,21 +39,18 @@ class OrderItemDiscountService
     return base_price unless combo_discount
 
     # Get the condition for the discount (e.g., Buy 2, Get 1 Free)
-    discount_condition = @discount.condition.to_i # Example: 2 (Buy 2)
+    discount_condition = combo_discount.free_items_count # Example: 2 (Buy 2)
 
     return base_price if discount_condition.zero? # Prevent division errors
 
     # Calculate how many free items should be given
-    free_items = (@quantity / discount_condition) * combo_discount.free_items_count
 
-    create_free_order_items(free_items)
+    create_free_order_items(combo_discount.free_items_count)
 
     base_price
   end
 
   def create_free_order_items(free_items)
-    return if free_items.zero?
-
     free_items.times do
       @order_item.order.order_items.create!(
         item: @order_item.item,

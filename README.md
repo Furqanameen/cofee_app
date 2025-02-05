@@ -126,209 +126,398 @@ Discounts
 
 
 
-# Coffee Shop POS System API
+# API Documentation for the Coffee Shop POS System
 
-## Overview
-This is a simplified POS (Point of Sale) system for American-style coffee shops, implemented using Ruby on Rails. The system manages shops, items, discounts, combo discounts, and orders. It includes API endpoints for creating, reading, and updating data related to these entities. Additionally, it supports real-time notifications for orders through WebSockets using ActionCable.
+This is the API documentation for the Coffee Shop POS system built using Ruby on Rails. This API allows users to interact with orders, items, discounts, combo discounts, and shops.
 
-## API Endpoints
+## Base URL
+The base URL for this API is: `https://yourdomain.com/api/v1`
 
-### **1. Shops**
-- **GET /api/v1/shops**  
-  Fetch all shops.
-  - **Response:**
+---
+
+## Endpoints
+
+### 1. **Shops**
+
+#### **GET /api/v1/shops**
+Fetch a list of all shops.
+
+- **Response:**
+  - Status: 200 OK
+  - Body: 
     ```json
     [
       {
         "id": 1,
-        "name": "Coffee Shop",
-        "region": "NYC",
-        "tax_rate": 0.08,
-        "created_at": "2025-02-05T00:00:00",
-        "updated_at": "2025-02-05T00:00:00"
+        "name": "Coffee Shop A",
+        "region": "New York",
+        "tax_rate": 0.07,
+        "created_at": "2025-02-01T00:00:00Z",
+        "updated_at": "2025-02-01T00:00:00Z"
       }
     ]
     ```
 
-- **POST /api/v1/shops**  
-  Create a new shop.
-  - **Request body:**
-    ```json
-    {
-      "name": "Coffee Shop",
-      "region": "NYC",
-      "tax_rate": 0.08
-    }
-    ```
+#### **GET /api/v1/shops/:id**
+Fetch details of a specific shop.
 
-- **GET /api/v1/shops/:id**  
-  Get a specific shop by `id`.
-  - **Response:**
-    Same as GET `/api/v1/shops`
-
-### **2. Items**
-- **GET /api/v1/items**  
-  Fetch all items.
-  - **Response:**
-    ```json
-    [
-      {
-        "id": 1,
-        "name": "Coffee",
-        "description": "Fresh brewed coffee",
-        "price": 5.0,
-        "quantity": 50,
-        "created_at": "2025-02-05T00:00:00",
-        "updated_at": "2025-02-05T00:00:00"
-      }
-    ]
-    ```
-
-### **3. Discounts**
-- **GET /api/v1/discounts**  
-  Fetch all discounts.
-  - **Response:**
-    ```json
-    [
-      {
-        "id": 1,
-        "name": "Winter Discount",
-        "discount_type": 1,
-        "value": 10.0,
-        "condition": "Winter season",
-        "created_at": "2025-02-05T00:00:00",
-        "updated_at": "2025-02-05T00:00:00"
-      }
-    ]
-    ```
-
-- **POST /api/v1/discounts**  
-  Create a new discount.
-  - **Request body:**
-    ```json
-    {
-      "name": "Winter Discount",
-      "discount_type": 1,
-      "value": 10.0,
-      "condition": "Winter season"
-    }
-    ```
-
-- **GET /api/v1/discounts/:id**  
-  Get a specific discount by `id`.
-  - **Response:**
-    Same as GET `/api/v1/discounts`
-
-### **4. Combo Discounts**
-- **GET /api/v1/combo_discounts**  
-  Fetch all combo discounts.
-  - **Response:**
-    ```json
-    [
-      {
-        "id": 1,
-        "discount_id": 1,
-        "item_id": 2,
-        "free_items_count": 1,
-        "created_at": "2025-02-05T00:00:00",
-        "updated_at": "2025-02-05T00:00:00"
-      }
-    ]
-    ```
-
-- **POST /api/v1/combo_discounts**  
-  Create a new combo discount.
-  - **Request body:**
-    ```json
-    {
-      "discount_id": 1,
-      "item_id": 2,
-      "free_items_count": 1
-    }
-    ```
-
-- **GET /api/v1/combo_discounts/:id**  
-  Get a specific combo discount by `id`.
-  - **Response:**
-    Same as GET `/api/v1/combo_discounts`
-
-### **5. Orders**
-- **POST /api/v1/orders**  
-  Create a new order.
-  - **Request body:**
-    ```json
-    {
-      "customer_id": 1,
-      "shop_id": 1,
-      "order_items": [
-        {
-          "item_id": 1,
-          "quantity": 2,
-          "unit_price": 10.0,
-          "tax_rate": 0.1,
-          "total_price": 20.0
-        }
-      ]
-    }
-    ```
-
-- **GET /api/v1/orders/:id**  
-  Get a specific order by `id`.
-  - **Response:**
+- **Parameters:**
+  - `id` (required): The ID of the shop.
+  
+- **Response:**
+  - Status: 200 OK or 404 Not Found
+  - Body (if found):
     ```json
     {
       "id": 1,
-      "customer_id": 1,
-      "shop_id": 1,
-      "status": "pending",
-      "subtotal": 20.0,
-      "total": 22.0,
-      "tax_total": 2.0,
-      "discount_total": 0.0,
-      "paid_at": null,
-      "completed_at": null,
-      "created_at": "2025-02-05T00:00:00",
-      "updated_at": "2025-02-05T00:00:00"
+      "name": "Coffee Shop A",
+      "region": "New York",
+      "tax_rate": 0.07,
+      "created_at": "2025-02-01T00:00:00Z",
+      "updated_at": "2025-02-01T00:00:00Z"
+    }
+    ```
+  - Body (if not found):
+    ```json
+    {
+      "error": "Shop not found"
     }
     ```
 
-- **GET /api/v1/orders**  
-  Fetch all orders.
-  - **Response:**
-    List of orders similar to GET `/api/v1/orders/:id`
+#### **POST /api/v1/shops**
+Create a new shop.
 
-- **PATCH /api/v1/orders/:id**  
-  Update the status of an order.
-  - **Request body:**
+- **Parameters:**
+  - `name` (required): Name of the shop.
+  - `region` (required): Region of the shop.
+  - `tax_rate` (required): Tax rate for the shop.
+
+- **Response:**
+  - Status: 201 Created or 422 Unprocessable Entity
+  - Body (on success):
     ```json
     {
-      "status": "completed"
-    }
-    ```
-
-- **POST /api/v1/orders/:id/pay**  
-  Mark the order as paid.
-  - **Response:**
-    ```json
-    {
-      "status": "paid",
-      "paid_at": "2025-02-05T00:00:00"
+      "message": "Shop created successfully",
+      "shop": {
+        "id": 1,
+        "name": "Coffee Shop A",
+        "region": "New York",
+        "tax_rate": 0.07
+      }
     }
     ```
 
 ---
 
-## How to Use
+### 2. **Items**
 
-### Postman Parameters
+#### **GET /api/v1/items**
+Fetch a list of all items.
 
-#### **1. Create a Shop**
-- **Endpoint:** `POST /api/v1/shops`
-- **Body (JSON):**
-  ```json
-  {
-    "name": "Coffee Shop",
-    "region": "NYC",
-    "tax_rate": 0.08
-  }
-# cofee_app
+- **Response:**
+  - Status: 200 OK
+  - Body:
+    ```json
+    [
+      {
+        "id": 1,
+        "name": "Espresso",
+        "description": "Strong coffee",
+        "price": 5.00,
+        "quantity": 10,
+        "created_at": "2025-02-01T00:00:00Z",
+        "updated_at": "2025-02-01T00:00:00Z"
+      }
+    ]
+    ```
+
+#### **GET /api/v1/items/:id**
+Fetch details of a specific item.
+
+- **Parameters:**
+  - `id` (required): The ID of the item.
+  
+- **Response:**
+  - Status: 200 OK or 404 Not Found
+  - Body (if found):
+    ```json
+    {
+      "id": 1,
+      "name": "Espresso",
+      "description": "Strong coffee",
+      "price": 5.00,
+      "quantity": 10,
+      "created_at": "2025-02-01T00:00:00Z",
+      "updated_at": "2025-02-01T00:00:00Z"
+    }
+    ```
+  - Body (if not found):
+    ```json
+    {
+      "error": "Item not found"
+    }
+    ```
+
+#### **POST /api/v1/items**
+Create a new item.
+
+- **Parameters:**
+  - `name` (required): Name of the item.
+  - `description` (required): Description of the item.
+  - `price` (required): Price of the item.
+  - `quantity` (required): Quantity in stock.
+
+- **Response:**
+  - Status: 201 Created or 422 Unprocessable Entity
+  - Body (on success):
+    ```json
+    {
+      "id": 1,
+      "name": "Espresso",
+      "description": "Strong coffee",
+      "price": 5.00,
+      "quantity": 10
+    }
+    ```
+
+---
+
+### 3. **Discounts**
+
+#### **GET /api/v1/discounts**
+Fetch a list of all discounts.
+
+- **Response:**
+  - Status: 200 OK
+  - Body:
+    ```json
+    [
+      {
+        "id": 1,
+        "name": "10% Off",
+        "discount_type": 0,
+        "value": 10.00,
+        "condition": "On orders above $50"
+      }
+    ]
+    ```
+
+#### **GET /api/v1/discounts/:id**
+Fetch details of a specific discount.
+
+- **Parameters:**
+  - `id` (required): The ID of the discount.
+
+- **Response:**
+  - Status: 200 OK or 404 Not Found
+  - Body (if found):
+    ```json
+    {
+      "id": 1,
+      "name": "10% Off",
+      "discount_type": 0,
+      "value": 10.00,
+      "condition": "On orders above $50"
+    }
+    ```
+  - Body (if not found):
+    ```json
+    {
+      "error": "Discount not found"
+    }
+    ```
+
+#### **POST /api/v1/discounts**
+Create a new discount.
+
+- **Parameters:**
+  - `name` (required): Name of the discount.
+  - `discount_type` (required): Type of discount (e.g., percentage or flat value).
+  - `value` (required): Discount value.
+  - `condition` (optional): Condition for the discount.
+
+- **Response:**
+  - Status: 201 Created or 422 Unprocessable Entity
+  - Body (on success):
+    ```json
+    {
+      "message": "Discount created successfully",
+      "discount": {
+        "id": 1,
+        "name": "10% Off",
+        "discount_type": 0,
+        "value": 10.00,
+        "condition": "On orders above $50"
+      }
+    }
+    ```
+
+---
+
+### 4. **Combo Discounts**
+
+#### **GET /api/v1/combo_discounts**
+Fetch a list of all combo discounts.
+
+- **Response:**
+  - Status: 200 OK
+  - Body:
+    ```json
+    [
+      {
+        "id": 1,
+        "discount_id": 1,
+        "item_id": 1,
+        "free_items_count": 1
+      }
+    ]
+    ```
+
+#### **GET /api/v1/combo_discounts/:id**
+Fetch details of a specific combo discount.
+
+- **Parameters:**
+  - `id` (required): The ID of the combo discount.
+
+- **Response:**
+  - Status: 200 OK or 404 Not Found
+  - Body (if found):
+    ```json
+    {
+      "id": 1,
+      "discount_id": 1,
+      "item_id": 1,
+      "free_items_count": 1
+    }
+    ```
+  - Body (if not found):
+    ```json
+    {
+      "error": "Combo discount not found"
+    }
+    ```
+
+#### **POST /api/v1/combo_discounts**
+Create a new combo discount.
+
+- **Parameters:**
+  - `discount_id` (required): ID of the associated discount.
+  - `item_id` (required): ID of the item being discounted.
+  - `free_items_count` (required): Number of free items for the combo.
+
+- **Response:**
+  - Status: 201 Created or 422 Unprocessable Entity
+  - Body (on success):
+    ```json
+    {
+      "message": "Combo discount created successfully",
+      "combo_discount": {
+        "id": 1,
+        "discount_id": 1,
+        "item_id": 1,
+        "free_items_count": 1
+      }
+    }
+    ```
+
+---
+
+### 5. **Orders**
+
+#### **GET /api/v1/orders**
+Fetch a list of all orders.
+
+- **Response:**
+  - Status: 200 OK
+  - Body:
+    ```json
+    [
+      {
+        "id": 1,
+        "customer_id": 1,
+        "shop_id": 1,
+        "status": 0,
+        "subtotal": 50.00,
+        "total": 55.00,
+        "tax_total": 5.00,
+        "discount_total": 0.00
+      }
+    ]
+    ```
+
+#### **POST /api/v1/orders**
+Create a new order.
+
+- **Parameters:**
+  - `customer_id` (required): The ID of the customer.
+  - `shop_id` (required): The ID of the shop.
+  - `items` (required): An array of items being ordered, with their quantity.
+
+- **Response:**
+  - Status: 201 Created or 422 Unprocessable Entity
+  - Body (on success):
+    ```json
+    {
+      "message": "Order created successfully",
+      "order": {
+        "id": 1,
+        "customer_id": 1,
+        "shop_id": 1,
+        "status": 0,
+        "subtotal": 50.00,
+        "total": 55.00,
+        "tax_total": 5.00,
+        "discount_total": 0.00
+      }
+    }
+    ```
+
+#### **GET /api/v1/orders/:id**
+Fetch details of a specific order.
+
+- **Parameters:**
+  - `id` (required): The ID of the order.
+
+- **Response:**
+  - Status: 200 OK or 404 Not Found
+  - Body (if found):
+    ```json
+    {
+      "id": 1,
+      "customer_id": 1,
+      "shop_id": 1,
+      "status": 0,
+      "subtotal": 50.00,
+      "total": 55.00,
+      "tax_total": 5.00,
+      "discount_total": 0.00
+    }
+    ```
+  - Body (if not found):
+    ```json
+    {
+      "error": "Order not found"
+    }
+    ```
+
+#### **POST /api/v1/orders/:id/pay**
+Mark the order as paid.
+
+- **Parameters:**
+  - `id` (required): The ID of the order.
+
+- **Response:**
+  - Status: 200 OK or 404 Not Found
+  - Body (on success):
+    ```json
+    {
+      "message": "Order paid successfully"
+    }
+    ```
+  - Body (if not found):
+    ```json
+    {
+      "error": "Order not found"
+    }
+    ```
+

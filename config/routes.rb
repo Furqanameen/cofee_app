@@ -7,6 +7,7 @@ Rails.application.routes.draw do
       resources :items, only: [:index, :create, :show]
       resources :discounts, only: [:index, :create, :show]
       resources :combo_discounts, only: [:index, :create, :show]
+      resources :order_items, only: [:index]
       resources :orders, only: [:create, :show, :index, :update] do
         post 'pay', on: :member
       end
