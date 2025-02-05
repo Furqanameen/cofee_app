@@ -1,0 +1,41 @@
+<h1>Order Report</h1>
+
+<table class="table table-bordered">
+  <thead>
+    <tr>
+      <th>Item</th>
+      <th>Quantity</th>
+      <th>Unit Price</th>
+      <th>Tax Rate</th>
+      <th>Discount Applied</th>
+      <th>Final Price</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @order.order_items.each do |order_item| %>
+      <tr>
+        <td>
+          <%= order_item.item.name %>
+          <% if order_item.unit_price == 0 %>
+            <span class="badge bg-success">FREE</span>
+          <% end %>
+        </td>
+        <td><%= order_item.quantity %></td>
+        <td><%= number_to_currency(order_item.unit_price) %></td>
+        <td><%= number_to_percentage(order_item.tax_rate, precision: 2) %></td>
+        <td>
+          <% if order_item.unit_price.zero? %>
+            <span class="text-success">Free Item</span>
+          <% else %>
+            <%= number_to_currency((order_item.unit_price * order_item.quantity) - order_item.total_price) %>
+          <% end %>
+        </td>
+        <td><%= number_to_currency(order_item.total_price) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<h3>Subtotal: <%= number_to_currency(@order.subtotal) %></h3>
+<h3>Tax: <%= number_to_currency(@order.tax_total) %></h3>
+<h3>Total Price: <%= number_to_currency(@order.total) %></h3>

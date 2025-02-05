@@ -1,0 +1,43 @@
+<h1>Items</h1>
+
+<%= link_to 'New Item', new_item_path, class: 'btn btn-primary mb-3' %> <!-- Added margin-bottom for spacing -->
+
+<table class="table table-bordered table-striped">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Price</th>
+      <th>Description</th>
+      <th>Discount Name</th>
+      <th>Discount Price</th>
+      <th colspan="3" class="text-center">Actions</th> <!-- Centered actions column -->
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @items.each do |item| %>
+      <tr>
+        <td><%= item.name %></td>
+        <td><%= item.price %></td>
+        <td><%= item.description %></td>
+
+        <% if item.discounts.any? %>
+          <td><%= item.discounts.first.name %></td>  <!-- Show the discount name of the first discount -->
+          <td><%= item.discounts.first.value.to_f %></td>  <!-- Show the discount value of the first discount -->
+        <% else %>
+          <td>No Discount</td>
+          <td>No Discount</td>
+        <% end %>
+
+        <!-- Action buttons -->
+        <td><%= link_to 'Show', item, class: 'btn btn-info btn-sm' %></td>
+        <td><%= link_to 'Edit', edit_item_path(item), class: 'btn btn-warning btn-sm' %></td>
+        
+        <!-- Buy button passing parameters -->
+        <td><%= link_to 'Buy', buy_item_path(item, shop_id: 2, customer_id: 2, discount_id: item.discounts.first&.id), class: 'btn btn-success btn-sm' %></td>
+        
+        <td><%= link_to 'Destroy', item, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger btn-sm' %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
