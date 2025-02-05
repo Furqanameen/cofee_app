@@ -34,8 +34,8 @@ This is a **Rails 7 API** for a simplified **Point-of-Sale (POS) system** design
 
 2. **Clone the Repository**:
    ```bash
-   git clone https://github.com/your-repository-url
-   cd your-project-directory
+   git clone git@github.com:Furqanameen/cofee_app.git
+   cd cofee_app
    ```
 3. **Build Containers and Setup Database:
 ```
