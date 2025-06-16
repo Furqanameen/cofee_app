@@ -1,4 +1,5 @@
 # Coffee Shop POS System
+#Need to update a few models for using etc
 
 This is a **Rails 7 API** for a simplified **Point-of-Sale (POS) system** designed for a coffee shop. It allows customers to view items, place orders, and receive notifications when their orders are ready.
 
